@@ -63,14 +63,51 @@ public struct Money {
     }
 }
 
-
 ////////////////////////////////////
 // Job
 //
 public class Job {
+    var title: String
+    var type: JobType
+    
     public enum JobType {
         case Hourly(Double)
         case Salary(UInt)
+    }
+    
+    // initializer
+    init(title: String, type: JobType) {
+        self.title = title
+        self.type = type
+    }
+    
+    func calculateIncome(_ hours: Int) -> Int {
+        if case let .Salary(yearlyAmount) = self.type {
+            return Int(yearlyAmount)
+        } else if case let .Hourly(hourlyWage) = self.type {
+            return Int(hourlyWage * Double(hours))
+        }
+        return 0 // fallback
+    }
+    
+    // raise by amt
+    func raise(byAmount: Double) {
+        if case let .Hourly(wage) = self.type {
+            self.type = .Hourly(wage + byAmount)
+        } else if case let .Salary(amount) = self.type {
+            self.type = .Salary(amount + UInt(byAmount)) // Convert to UInt since Salary takes UInt
+        }
+    }
+
+    // raise by percentage
+    func raise(byPercent: Double) {
+        if case let .Hourly(wage) = self.type {
+            self.type = .Hourly(wage + (wage * byPercent))
+        } else if case let .Salary(amount) = self.type {
+            let currentAmount = Double(amount)
+            let newAmount = currentAmount + (currentAmount * byPercent)
+            self.type = .Salary(UInt(newAmount)) // Convert to UInt since Salary takes UInt
+        }
     }
 }
 
