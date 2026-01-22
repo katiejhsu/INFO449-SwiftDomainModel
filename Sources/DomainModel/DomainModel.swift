@@ -115,6 +115,28 @@ public class Job {
 // Person
 //
 public class Person {
+    var firstName: String
+    var lastName: String
+    var age: Int
+    var job: Job?
+    var spouse: Person?
+    
+    // initializer
+    public init(firstName: String, lastName: String, age: Int) {
+        self.firstName = firstName
+        self.lastName = lastName
+        self.age = age
+    }
+    
+    //toString
+    func toString () -> String {
+        // use nil if the optional properties are empty
+        let jobTitle = self.job?.title ?? "nil"
+        let spouseName = self.spouse?.firstName ?? "nil"
+                
+        return "[Person: firstName:\(firstName) lastName:\(lastName) age:\(age) job:\(jobTitle) spouse:\(spouseName)]"
+    }
+    
 }
 
 ////////////////////////////////////
