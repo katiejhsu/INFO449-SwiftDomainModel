@@ -26,20 +26,19 @@ public struct Money {
     }
     
     func convert(_ target: String) -> Money {
-        // normalize
         var usdAmount: Double = 0.0
         
+        // normalize to USD
         switch self.currency {
-                case "USD": usdAmount = Double(self.amount)
-                case "GBP": usdAmount = Double(self.amount) * 2.0
-                case "EUR": usdAmount = Double(self.amount) / 1.5
-                case "CAN": usdAmount = Double(self.amount) / 1.25
-                default: usdAmount = 0.0
-            }
+            case "USD": usdAmount = Double(self.amount)
+            case "GBP": usdAmount = Double(self.amount) * 2.0
+            case "EUR": usdAmount = Double(self.amount) / 1.5
+            case "CAN": usdAmount = Double(self.amount) / 1.25
+            default: usdAmount = 0.0
+        }
         
+        // convert to Target
         var finalAmount: Double = 0.0
-        
-        // convert
         switch target {
             case "USD": finalAmount = usdAmount
             case "GBP": finalAmount = usdAmount * 0.5
@@ -48,18 +47,24 @@ public struct Money {
             default: finalAmount = 0.0
         }
         
-        let roundedResult = Int(finalAmount)
-        
+        let roundedResult = Int(finalAmount.rounded())
         return Money(amount: roundedResult, currency: target)
     }
-    
-    func add (_ other: Money) -> Money {
-        let convertedOther = other.convert(self.currency)
-        return Money(amount: self.amount + convertedOther.amount, currency: self.currency)
+
+    func add(_ other: Money) -> Money {
+        // convert self to other
+        let convertedSelf = self.convert(other.currency)
+        
+        // add them together in that curr
+        return Money(amount: convertedSelf.amount + other.amount, currency: other.currency)
     }
+    
     func subtract(_ other: Money) -> Money {
-        let convertedOther = other.convert(self.currency)
-        return Money(amount: self.amount - convertedOther.amount, currency: self.currency)
+        // convert self to the other currency
+        let convertedSelf = self.convert(other.currency)
+        
+        // sub other in that curr
+        return Money(amount: convertedSelf.amount - other.amount, currency: other.currency)
     }
 }
 
@@ -154,13 +159,6 @@ public class Person {
 
 ////////////////////////////////////
 // Family
-// Family
-/*
-Finally, a family is a group of people, some of whom have jobs, some don't, but whose total income is what's taxed come April 1. Create a class called Family that has one property, members, which is a collection of Persons. US law dictates that a family consists of two Persons at a minimum (spouse1 and spouse2), so create an initializer that takes two Person parameters (called spouse1 and spouse2 to avoid genderfying parameter names). However, US law also frowns on being married more than once at the same time, so make sure your two parameters each have no spouse, and set their respective spouse fields to each other.
-
-Next, flesh out the haveChild method, which takes a Person parameter to add to the family. However, US law also frowns on minors having children, so let's make sure that at least one Person of the two spouses is over the age of 21. If the Family cannot have a child, then this method should return false; this method should return true only if the child can be successfully added to the Family.
-
-Finally, the householdIncome method will calculate the complete income for the Family. */
 
 public class Family {
     var members: [Person]
