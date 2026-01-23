@@ -118,8 +118,19 @@ public class Person {
     var firstName: String
     var lastName: String
     var age: Int
-    var job: Job?
-    var spouse: Person?
+    
+    // declare w age restrictions
+    var job: Job? {
+        didSet {
+        if age < 16 { job = nil }
+        }
+    }
+    
+    var spouse: Person? {
+        didSet {
+            if age < 18 { spouse = nil }
+        }
+    }
     
     // initializer
     public init(firstName: String, lastName: String, age: Int) {
@@ -127,6 +138,8 @@ public class Person {
         self.lastName = lastName
         self.age = age
     }
+    
+
     
     //toString
     func toString () -> String {
